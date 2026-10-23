@@ -4,7 +4,7 @@
 
 - C++17 compiler (g++ 9+ or clang++)
 - CMake 3.16+
-- C++17 compiler only (OpenSSL no longer required)
+- C++17 compiler only
 - SQLite is **bundled** (amalgamation in `third_party/`)
 
 ## Build
