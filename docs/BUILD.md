@@ -4,7 +4,7 @@
 
 - C++17 compiler (g++ 9+ or clang++)
 - CMake 3.16+
-- OpenSSL development libraries (`libssl-dev` on Debian/Ubuntu)
+- C++17 compiler only (OpenSSL no longer required)
 - SQLite is **bundled** (amalgamation in `third_party/`)
 
 ## Build
@@ -43,14 +43,14 @@ On first run the database is created and seeded with demo accounts:
 | Strategy (late penalty)    | `LatePenaltyStrategy.hpp` / `.cpp`            |
 | Repository / DAO           | `include/lms/infra/Repositories.hpp`          |
 | Parameterised SQL          | all `Sqlite*Repository` classes               |
-| Password hashing           | `Sha256PasswordHasher` (OpenSSL SHA-256+salt) |
+| Password hashing           | `Sha256PasswordHasher` (portable SHA-256 + salt) |
 | Audit log                  | `SqliteAuditRepository` + `Audit_Log` table   |
 | Layered architecture       | `domain` / `app` / `infra` / `ui` namespaces  |
 
 ## Password hashing justification
 
-Passwords are stored only as **salted SHA-256 hashes** using OpenSSL (`saltHex$digestHex`).  
-Argon2id (e.g. via libsodium) is preferred for new production systems; SHA-256+salt is used here because OpenSSL is universally available and the school system is offline single-host. The `IPasswordHasher` interface allows swapping to Argon2 without changing services.
+Passwords are stored only as **salted SHA-256 hashes** (format `saltHex$digestHex`) using a portable built-in implementation — no OpenSSL or other crypto library is required. This meets the assignment rule that passwords must never be stored in plain text. Argon2id is preferred for high-security production systems; the `IPasswordHasher` interface allows swapping the algorithm without changing services.
+
 
 ## Coding standard
 

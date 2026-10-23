@@ -12,9 +12,7 @@ else()
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-find_package(OpenSSL REQUIRED)
-
-# SQLite amalgamation (bundled)
+# SQLite amalgamation (bundled) – no system SQLite or OpenSSL required
 add_library(sqlite3 STATIC third_party/sqlite3.c)
 target_include_directories(sqlite3 PUBLIC third_party)
 target_compile_definitions(sqlite3 PRIVATE SQLITE_THREADSAFE=1 SQLITE_ENABLE_RTREE=0)
@@ -40,7 +38,13 @@ add_library(lms_infra
   src/infra/SqliteCourseRepository.cpp
 )
 target_include_directories(lms_infra PUBLIC include third_party)
-target_link_libraries(lms_infra PUBLIC lms_domain sqlite3 OpenSSL::SSL OpenSSL::Crypto)
+target_link_libraries(lms_infra PUBLIC lms_domain sqlite3)
+# Windows needs Winsock / crypto for nothing now; Linux may need pthread+dl for SQLite
+if(WIN32)
+  # no extra system libs required
+elseif(UNIX)
+  target_link_libraries(lms_infra PUBLIC pthread dl)
+endif()
 
 # Application services
 add_library(lms_app

@@ -44,7 +44,7 @@ cd build && ./lms
 - Extensions (individual), resubmission before deadline  
 - Marking with written feedback; marks hidden until HoD release  
 - **Audit log** (who, when, old, new, reason)  
-- Salted password hashes (OpenSSL SHA-256; interface ready for Argon2)  
+- Salted password hashes (portable SHA-256; interface ready for Argon2)  
 - Exceptions + validation; menu-driven console UI  
 - Offline SQLite persistence  
 

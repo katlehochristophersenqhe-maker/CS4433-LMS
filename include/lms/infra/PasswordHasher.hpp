@@ -11,9 +11,11 @@ public:
     virtual bool verify(const std::string& password, const std::string& stored) = 0;
 };
 
-// OpenSSL SHA-256 + random salt. Stored format: "saltHex$hashHex".
-// Justification: OpenSSL is widely available and sufficient for a school offline system.
-// Production systems should prefer Argon2id (libsodium) for memory-hard hashing.
+// Portable SHA-256 + random salt (no external crypto library).
+// Stored format: "saltHex$hashHex".
+// Justification: works offline on Windows/Linux/macOS with only a C++17 compiler.
+// Production systems should prefer Argon2id (e.g. libsodium) for memory-hard hashing.
+// IPasswordHasher allows swapping the algorithm without changing services.
 class Sha256PasswordHasher : public IPasswordHasher {
 public:
     std::string hash(const std::string& password) override;
