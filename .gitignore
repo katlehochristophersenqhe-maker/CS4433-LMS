@@ -1,4 +1,5 @@
 # Build
+.venv/
 build/
 cmake-build-*/
 out/
