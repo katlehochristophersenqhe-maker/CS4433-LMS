@@ -32,6 +32,7 @@ public:
                    IExtensionRepository& extensions, ICourseRepository& courses,
                    LatePenaltyStrategy& penalty);
     std::vector<Assignment> listAssignments(int studentId);
+    std::vector<Submission> listReleasedSubmissions(int studentId);
     void submit(int studentId, int assignmentId, const std::string& content);
 
 private:

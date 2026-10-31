@@ -16,8 +16,7 @@ cd build
 ./lms
 ```
 
-The command above works with MinGW on Windows and does not need OpenSSL. On Linux,
-append `-lpthread -ldl` to the `g++` command if your SQLite build needs them.
+The command above works with MinGW on Windows. On Linux,append `-lpthread -ldl` to the `g++` command if your SQLite build needs them.
 
 Or with CMake (recommended):
 
@@ -62,3 +61,47 @@ lms/
 ```
 
 See `docs/BUILD.md` for design mapping and coding notes.
+
+## Phase 5 tests
+
+The Phase 5 tests are in `tests/`. The test target is defined in
+`CMakeLists.txt`.
+
+### Run with CMake
+
+```powershell
+cmake -S . -B build-tests
+cmake --build build-tests --target lms_tests
+.\build-tests\lms_tests.exe
+```
+
+Expected result:
+
+```text
+All tests passed (42 assertions in 21 test cases)
+```
+
+### MinGW fallback on Windows
+
+If CMake fails while detecting the MinGW compiler, compile the test target
+directly with the installed MinGW tools:
+
+```powershell
+New-Item -ItemType Directory -Force build-phase5 | Out-Null
+gcc -c third_party/sqlite3.c -o build-phase5/sqlite3_test.o -DSQLITE_THREADSAFE=1 -DSQLITE_ENABLE_RTREE=0
+g++ -std=c++17 -Wall -Wextra -Wpedantic -Iinclude -Ithird_party -Itests `
+  tests/test_late_penalty.cpp `
+  tests/test_password_hasher.cpp `
+  tests/test_user_factory.cpp `
+  tests/test_integration_auth.cpp `
+  src/domain/LatePenaltyStrategy.cpp `
+  src/domain/User.cpp `
+  src/infra/PasswordHasher.cpp `
+  src/infra/SqliteDatabase.cpp `
+  src/infra/SqliteUserRepository.cpp `
+  src/infra/SqliteCourseRepository.cpp `
+  src/app/AuthService.cpp `
+  src/app/AdminService.cpp `
+  build-phase5/sqlite3_test.o -o build-phase5/lms_tests.exe
+.\build-phase5\lms_tests.exe
+```

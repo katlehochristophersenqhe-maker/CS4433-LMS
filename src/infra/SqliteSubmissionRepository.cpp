@@ -65,6 +65,18 @@ std::vector<Submission> SqliteSubmissionRepository::findByDepartmentAndStatus(
     return out;
 }
 
+std::vector<Submission> SqliteSubmissionRepository::findByStudentAndStatus(
+    int studentId, SubmissionStatus status) {
+    SqliteStatement st(db_,
+        "SELECT submission_id, assignment_id, student_id, content, submitted_at, status, "
+        "raw_mark, feedback, final_mark, days_late FROM Submission "
+        "WHERE student_id = ? AND status = ?");
+    st.bind(1, studentId).bind(2, toString(status));
+    std::vector<Submission> out;
+    while (st.step()) out.push_back(mapRow(st));
+    return out;
+}
+
 void SqliteSubmissionRepository::save(Submission& s) {
     SqliteStatement st(db_,
         "INSERT INTO Submission (assignment_id, student_id, content, submitted_at, status, "

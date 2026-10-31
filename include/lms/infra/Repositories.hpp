@@ -42,6 +42,7 @@ public:
     virtual std::optional<Submission> findFor(int assignmentId, int studentId) = 0;
     virtual std::vector<Submission> findByAssignmentAndStatus(int assignmentId, SubmissionStatus status) = 0;
     virtual std::vector<Submission> findByDepartmentAndStatus(int departmentId, SubmissionStatus status) = 0;
+    virtual std::vector<Submission> findByStudentAndStatus(int studentId, SubmissionStatus status) = 0;
     virtual void save(Submission& s) = 0;  // insert or replace; sets s.id
     virtual void updateMarkAndStatus(int id, double rawMark, double finalMark,
                                      const std::string& feedback, SubmissionStatus status) = 0;
@@ -55,6 +56,7 @@ public:
     std::optional<Submission> findFor(int assignmentId, int studentId) override;
     std::vector<Submission> findByAssignmentAndStatus(int assignmentId, SubmissionStatus status) override;
     std::vector<Submission> findByDepartmentAndStatus(int departmentId, SubmissionStatus status) override;
+    std::vector<Submission> findByStudentAndStatus(int studentId, SubmissionStatus status) override;
     void save(Submission& s) override;
     void updateMarkAndStatus(int id, double rawMark, double finalMark,
                              const std::string& feedback, SubmissionStatus status) override;

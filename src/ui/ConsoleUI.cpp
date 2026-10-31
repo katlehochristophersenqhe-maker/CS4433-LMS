@@ -104,7 +104,8 @@ void ConsoleUI::adminMenu(Administrator&) {
 void ConsoleUI::studentMenu(Student& user) {
     while (true) {
         std::cout << "\n--- Student ---\n"
-                  << "1. List my assignments\n2. Submit work\n0. Logout\n";
+                  << "1. List my assignments\n2. Submit work\n"
+                  << "3. View released marks\n0. Logout\n";
         int c = readInt("Choice: ");
         try {
             if (c == 0) return;
@@ -121,6 +122,16 @@ void ConsoleUI::studentMenu(Student& user) {
                 auto content = readLine("Submission text: ");
                 student_.submit(user.id(), aid, content);
                 std::cout << "Submitted.\n";
+            } else if (c == 3) {
+                auto list = student_.listReleasedSubmissions(user.id());
+                if (list.empty()) {
+                    std::cout << "(no released marks)\n";
+                }
+                for (const auto& s : list) {
+                    std::cout << "  assignment=" << s.assignmentId
+                              << " mark=" << (s.finalMark ? std::to_string(*s.finalMark) : "-")
+                              << " feedback=" << (s.feedback ? *s.feedback : "") << "\n";
+                }
             }
         } catch (const LmsError& e) {
             std::cout << "Error: " << e.what() << "\n";

@@ -12,6 +12,10 @@ std::vector<Assignment> StudentService::listAssignments(int studentId) {
     return assignments_.findForStudent(studentId);
 }
 
+std::vector<Submission> StudentService::listReleasedSubmissions(int studentId) {
+    return submissions_.findByStudentAndStatus(studentId, SubmissionStatus::Released);
+}
+
 void StudentService::submit(int studentId, int assignmentId, const std::string& content) {
     if (content.empty()) throw ValidationError("Submission content cannot be empty");
 

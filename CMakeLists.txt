@@ -66,3 +66,26 @@ target_link_libraries(lms PRIVATE lms_app lms_infra lms_domain)
 configure_file(${CMAKE_SOURCE_DIR}/sql/schema.sql ${CMAKE_BINARY_DIR}/schema.sql COPYONLY)
 
 message(STATUS "Moderated LMS configured. Build with: cmake --build .")
+
+# ---- Phase 5: tests ----
+enable_testing()
+add_executable(lms_tests
+  tests/test_late_penalty.cpp
+  tests/test_password_hasher.cpp
+  tests/test_user_factory.cpp
+  tests/test_integration_auth.cpp
+  src/domain/LatePenaltyStrategy.cpp
+  src/domain/User.cpp
+  src/infra/PasswordHasher.cpp
+  src/infra/SqliteDatabase.cpp
+  src/infra/SqliteUserRepository.cpp
+  src/infra/SqliteCourseRepository.cpp
+  src/app/AuthService.cpp
+  src/app/AdminService.cpp
+)
+target_include_directories(lms_tests PRIVATE include third_party tests)
+target_link_libraries(lms_tests PRIVATE sqlite3)
+if(UNIX)
+  target_link_libraries(lms_tests PRIVATE pthread dl)
+endif()
+add_test(NAME lms_tests COMMAND lms_tests)
