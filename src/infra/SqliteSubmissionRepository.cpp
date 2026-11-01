@@ -38,6 +38,31 @@ std::optional<Submission> SqliteSubmissionRepository::findFor(int assignmentId, 
     return mapRow(st);
 }
 
+std::vector<SubmissionDetails> SqliteSubmissionRepository::findForLecturer(int lecturerId) {
+    SqliteStatement st(db_,
+        "SELECT s.submission_id, s.assignment_id, s.student_id, s.content, s.submitted_at, s.status, "
+        "s.raw_mark, s.feedback, s.final_mark, s.days_late, a.title, c.code, u.full_name, u.username "
+        "FROM Submission s "
+        "JOIN Assignment a ON a.assignment_id = s.assignment_id "
+        "JOIN Course c ON c.course_id = a.course_id "
+        "JOIN User u ON u.user_id = s.student_id "
+        "WHERE c.lecturer_id = ? "
+        "ORDER BY a.title, u.full_name, s.submission_id");
+    st.bind(1, lecturerId);
+
+    std::vector<SubmissionDetails> out;
+    while (st.step()) {
+        SubmissionDetails details;
+        details.submission = mapRow(st);
+        details.assignmentTitle = st.columnText(10);
+        details.courseCode = st.columnText(11);
+        details.studentName = st.columnText(12);
+        details.studentUsername = st.columnText(13);
+        out.push_back(std::move(details));
+    }
+    return out;
+}
+
 std::vector<Submission> SqliteSubmissionRepository::findByAssignmentAndStatus(
     int assignmentId, SubmissionStatus status) {
     SqliteStatement st(db_,

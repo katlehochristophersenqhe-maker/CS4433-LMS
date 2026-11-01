@@ -27,13 +27,14 @@ Start the program (`lms` or `lms.exe`). At the prompt enter username and passwor
 | Menu option | What it does |
 |-------------|--------------|
 | Create assignment | Set title, description, deadline, maximum mark |
-| List submissions | See work for an assignment |
+| List and view submissions | Browse submissions for your courses, select one, and review the student's details and submitted work |
 | Mark submission | Enter numeric mark and **written feedback** (required) |
 | Grant extension | New deadline for one student with a reason |
 | Grant class extension | New deadline for all students on an assignment, with a reason |
 | Logout | Return to login |
 
 **Rules:** Marks are not visible to students until the HoD releases them. Late work is penalised automatically when marked.
+The submissions list includes each submission's ID, course, assignment, student name, username and status. Select a listed row to view the submitted content and details.
 
 ---
 
@@ -46,9 +47,11 @@ Start the program (`lms` or `lms.exe`). At the prompt enter username and passwor
 | View marked submissions | List marked work in your department |
 | Moderate mark | Accept the mark, or change it **with a reason** (logged) |
 | Release mark | Make mark and feedback visible to the student |
+| View released marks | Review released marks and feedback in your department |
 | Logout | Return to login |
 
 **Rules:** A reason is required when changing a mark. Only release when moderation is complete.
+When the program asks for a Submission ID, enter the value labeled **Submission ID** in the submission list; do not enter the Student ID or Assignment ID.
 
 ---
 

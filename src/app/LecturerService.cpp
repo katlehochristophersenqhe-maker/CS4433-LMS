@@ -90,4 +90,8 @@ std::vector<Submission> LecturerService::listSubmissions(int assignmentId) {
     return all;
 }
 
+std::vector<SubmissionDetails> LecturerService::listSubmissionsForLecturer(int lecturerId) {
+    return submissions_.findForLecturer(lecturerId);
+}
+
 } // namespace lms

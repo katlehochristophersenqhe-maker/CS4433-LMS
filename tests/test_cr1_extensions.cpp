@@ -102,6 +102,24 @@ TEST_CASE("CR1 – class-wide extension is visible and used for submission laten
     REQUIRE(submission->daysLate == 0);
 }
 
+TEST_CASE("Lecturer can browse submissions for their assigned courses",
+          "[integration][lecturer][submissions]") {
+    Cr1Fixture fixture;
+    const auto assignment = fixture.makeAssignment("2099-01-01T00:00:00Z");
+    fixture.student().submit(20, assignment.id, "My submitted solution");
+
+    const auto submissions = fixture.lecturer().listSubmissionsForLecturer(10);
+    REQUIRE(submissions.size() == 1);
+    REQUIRE(submissions[0].submission.assignmentId == assignment.id);
+    REQUIRE(submissions[0].submission.studentId == 20);
+    REQUIRE(submissions[0].submission.content == "My submitted solution");
+    REQUIRE(submissions[0].assignmentTitle == "Test assignment");
+    REQUIRE(submissions[0].courseCode == "MATH101");
+    REQUIRE(submissions[0].studentName == "Student");
+    REQUIRE(submissions[0].studentUsername == "student");
+    REQUIRE(fixture.lecturer().listSubmissionsForLecturer(999).empty());
+}
+
 TEST_CASE("CR1 – individual extension takes precedence over class-wide extension",
           "[integration][extension][CR1]") {
     Cr1Fixture fixture;

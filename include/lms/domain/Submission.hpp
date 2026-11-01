@@ -22,6 +22,14 @@ struct Submission {
     }
 };
 
+struct SubmissionDetails {
+    Submission submission;
+    std::string assignmentTitle;
+    std::string courseCode;
+    std::string studentName;
+    std::string studentUsername;
+};
+
 struct Assignment {
     int id = 0;
     int courseId = 0;

@@ -132,7 +132,8 @@ void ConsoleUI::studentMenu(const Student& user) {
                     std::cout << "(no released marks)\n";
                 }
                 for (const auto& s : list) {
-                    std::cout << "  assignment=" << s.assignmentId
+                    std::cout << "  Submission ID: " << s.id
+                              << " | Assignment ID: " << s.assignmentId
                               << " mark=" << (s.finalMark ? std::to_string(*s.finalMark) : "-")
                               << " feedback=" << (s.feedback ? *s.feedback : "") << "\n";
                 }
@@ -146,7 +147,7 @@ void ConsoleUI::studentMenu(const Student& user) {
 void ConsoleUI::lecturerMenu(const Lecturer& user) {
     while (true) {
         std::cout << "\n--- Lecturer ---\n"
-                  << "1. Create assignment\n2. List submissions\n3. Mark submission\n"
+                  << "1. Create assignment\n2. List and view submissions\n3. Mark submission\n"
                   << "4. Grant extension\n5. Grant class extension\n0. Logout\n";
         int c = readInt("Choice: ");
         try {
@@ -163,15 +164,45 @@ void ConsoleUI::lecturerMenu(const Lecturer& user) {
                 int id = lecturer_.createAssignment(cid, title, desc, dl, maxM);
                 std::cout << "Created assignment id=" << id << "\n";
             } else if (c == 2) {
-                int aid = readInt("Assignment id: ");
-                auto list = lecturer_.listSubmissions(aid);
-                for (const auto& s : list) {
-                    std::cout << "  sub#" << s.id << " student=" << s.studentId
-                              << " status=" << toString(s.status)
-                              << " daysLate=" << s.daysLate << "\n";
+                const auto list = lecturer_.listSubmissionsForLecturer(user.id());
+                if (list.empty()) {
+                    std::cout << "There are no submissions for your courses.\n";
+                    continue;
                 }
+
+                for (std::size_t i = 0; i < list.size(); ++i) {
+                    const auto& details = list[i];
+                    std::cout << "  [" << i + 1 << "] " << details.courseCode
+                              << " | " << details.assignmentTitle
+                              << " | Student: " << details.studentName
+                              << " (" << details.studentUsername << ")"
+                              << " | Submission ID: " << details.submission.id
+                              << " | Status: " << toString(details.submission.status) << "\n";
+                }
+
+                const int choice = readInt("Choose a submission number to view details (0 to return): ");
+                if (choice == 0) continue;
+                if (choice < 1 || static_cast<std::size_t>(choice) > list.size()) {
+                    std::cout << "Invalid submission choice.\n";
+                    continue;
+                }
+
+                const auto& details = list[static_cast<std::size_t>(choice - 1)];
+                const auto& submission = details.submission;
+                std::cout << "\n--- Submission details ---\n"
+                          << "Submission ID: " << submission.id << "\n"
+                          << "Assignment ID: " << submission.assignmentId << "\n"
+                          << "Assignment: " << details.assignmentTitle << "\n"
+                          << "Course: " << details.courseCode << "\n"
+                          << "Student ID: " << submission.studentId << "\n"
+                          << "Student: " << details.studentName
+                          << " (" << details.studentUsername << ")\n"
+                          << "Status: " << toString(submission.status) << "\n"
+                          << "Submitted at: " << submission.submittedAt << "\n"
+                          << "Days late: " << submission.daysLate << "\n"
+                          << "Content:\n" << submission.content << "\n";
             } else if (c == 3) {
-                int sid = readInt("Submission id: ");
+                int sid = readInt("Submission ID to mark: ");
                 double mark = 0;
                 std::cout << "Raw mark: ";
                 std::cin >> mark;
@@ -202,19 +233,23 @@ void ConsoleUI::lecturerMenu(const Lecturer& user) {
 void ConsoleUI::hodMenu(const HeadOfDepartment& user) {
     while (true) {
         std::cout << "\n--- Head of Department ---\n"
-                  << "1. View marked submissions\n2. Moderate mark\n3. Release mark\n0. Logout\n";
+                  << "1. View marked submissions\n2. Moderate mark\n3. Release mark\n"
+                  << "4. View released marks\n0. Logout\n";
         int c = readInt("Choice: ");
         try {
             if (c == 0) return;
             if (c == 1) {
                 auto list = hod_.markedInDepartment(user.departmentId());
+                if (list.empty()) {
+                    std::cout << "There are no marked submissions to view.\n";
+                }
                 for (const auto& s : list) {
-                    std::cout << "  sub#" << s.id << " student=" << s.studentId
+                    std::cout << "  Submission ID: " << s.id << " | Student ID: " << s.studentId
                               << " final=" << (s.finalMark ? std::to_string(*s.finalMark) : "-")
                               << " status=" << toString(s.status) << "\n";
                 }
             } else if (c == 2) {
-                int sid = readInt("Submission id: ");
+                int sid = readInt("Submission ID to moderate: ");
                 auto change = readLine("Change mark? (y/n): ");
                 if (change == "y" || change == "Y") {
                     double nm = 0;
@@ -228,9 +263,20 @@ void ConsoleUI::hodMenu(const HeadOfDepartment& user) {
                 }
                 std::cout << "Moderated.\n";
             } else if (c == 3) {
-                int sid = readInt("Submission id: ");
+                int sid = readInt("Submission ID to release: ");
                 hod_.release(sid);
                 std::cout << "Released.\n";
+            } else if (c == 4) {
+                auto list = hod_.releasedInDepartment(user.departmentId());
+                if (list.empty()) {
+                    std::cout << "There are no released marks to view.\n";
+                }
+                for (const auto& s : list) {
+                    std::cout << "  Submission ID: " << s.id << " | Assignment ID: " << s.assignmentId
+                              << " | Student ID: " << s.studentId
+                              << " mark=" << (s.finalMark ? std::to_string(*s.finalMark) : "-")
+                              << " feedback=" << (s.feedback ? *s.feedback : "") << "\n";
+                }
             }
         } catch (const LmsError& e) {
             std::cout << "Error: " << e.what() << "\n";

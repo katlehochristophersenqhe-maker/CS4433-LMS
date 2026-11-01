@@ -20,11 +20,25 @@ The command above works with MinGW on Windows. On Linux,append `-lpthread -ldl` 
 
 Or with CMake (recommended):
 
-```bash
+```powershell
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-cmake --build build -j
-cd build && ./lms
+cmake --build build --parallel
+Set-Location build
+.\lms.exe
 ```
+
+For a fresh presentation database, run this from the project root after
+building:
+
+```powershell
+.\build\lms.exe .\build\presentation-demo-v2.db
+```
+
+The database contains six submissions across three assignments, including
+submitted work, a submission awaiting moderation, and released marks, so the
+lecturer submission list has several students and statuses to browse. The app
+does not overwrite or automatically update an existing database; use a new
+filename to get the updated sample data.
 
 ## Demo accounts (seeded on first run)
 
@@ -34,6 +48,8 @@ cd build && ./lms
 | hod1 | hod123 | Head of Department |
 | lec1 | lec123 | Lecturer |
 | stu1 | stu123 | Student |
+| stu2 | stu123 | Student |
+| stu3 | stu123 | Student |
 
 ## Implemented (Must requirements)
 

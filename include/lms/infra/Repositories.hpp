@@ -40,6 +40,7 @@ public:
     virtual ~ISubmissionRepository() = default;
     virtual std::optional<Submission> findById(int id) = 0;
     virtual std::optional<Submission> findFor(int assignmentId, int studentId) = 0;
+    virtual std::vector<SubmissionDetails> findForLecturer(int lecturerId) = 0;
     virtual std::vector<Submission> findByAssignmentAndStatus(int assignmentId, SubmissionStatus status) = 0;
     virtual std::vector<Submission> findByDepartmentAndStatus(int departmentId, SubmissionStatus status) = 0;
     virtual std::vector<Submission> findByStudentAndStatus(int studentId, SubmissionStatus status) = 0;
@@ -54,6 +55,7 @@ public:
     explicit SqliteSubmissionRepository(SqliteDatabase& db);
     std::optional<Submission> findById(int id) override;
     std::optional<Submission> findFor(int assignmentId, int studentId) override;
+    std::vector<SubmissionDetails> findForLecturer(int lecturerId) override;
     std::vector<Submission> findByAssignmentAndStatus(int assignmentId, SubmissionStatus status) override;
     std::vector<Submission> findByDepartmentAndStatus(int departmentId, SubmissionStatus status) override;
     std::vector<Submission> findByStudentAndStatus(int studentId, SubmissionStatus status) override;

@@ -64,6 +64,7 @@ public:
                              const std::string& reason, int lecturerId);
     void markSubmission(int submissionId, double rawMark, const std::string& feedback, int lecturerId);
     std::vector<Submission> listSubmissions(int assignmentId);
+    std::vector<SubmissionDetails> listSubmissionsForLecturer(int lecturerId);
 
 private:
     void saveExtension(int assignmentId, std::optional<int> studentId,
@@ -81,6 +82,7 @@ class HoDService {
 public:
     HoDService(ISubmissionRepository& submissions, IAuditRepository& audit);
     std::vector<Submission> markedInDepartment(int departmentId);
+    std::vector<Submission> releasedInDepartment(int departmentId);
     void moderate(int submissionId, std::optional<double> newMark, const std::string& reason, int hodId);
     void release(int submissionId);
 

@@ -9,6 +9,10 @@ std::vector<Submission> HoDService::markedInDepartment(int departmentId) {
     return submissions_.findByDepartmentAndStatus(departmentId, SubmissionStatus::Marked);
 }
 
+std::vector<Submission> HoDService::releasedInDepartment(int departmentId) {
+    return submissions_.findByDepartmentAndStatus(departmentId, SubmissionStatus::Released);
+}
+
 void HoDService::moderate(int submissionId, std::optional<double> newMark,
                           const std::string& reason, int hodId) {
     auto sub = submissions_.findById(submissionId);
