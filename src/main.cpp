@@ -9,8 +9,7 @@
 
 namespace fs = std::filesystem;
 
-static void seedIfEmpty(lms::SqliteDatabase& db,
-                        lms::AdminService& admin,
+static void seedIfEmpty(lms::AdminService& admin,
                         lms::IUserRepository& users) {
     if (users.findByUsername("admin")) return; // already seeded
 
@@ -60,7 +59,7 @@ int main(int argc, char** argv) {
         lms::LecturerService lecturer(assignmentRepo, submissionRepo, extensionRepo, auditRepo, penalty);
         lms::HoDService hod(submissionRepo, auditRepo);
 
-        seedIfEmpty(db, admin, userRepo);
+        seedIfEmpty(admin, userRepo);
 
         lms::ConsoleUI ui(auth, admin, student, lecturer, hod);
         ui.run();

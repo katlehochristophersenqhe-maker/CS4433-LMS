@@ -46,7 +46,7 @@ void SqliteDatabase::runSchemaFile(const std::string& path) {
 
 // ---- Statement ----
 
-SqliteStatement::SqliteStatement(SqliteDatabase& db, const std::string& sql) {
+SqliteStatement::SqliteStatement(const SqliteDatabase& db, const std::string& sql) {
     if (sqlite3_prepare_v2(db.handle(), sql.c_str(), -1, &stmt_, nullptr) != SQLITE_OK) {
         throw PersistenceError(std::string("prepare failed: ") + sqlite3_errmsg(db.handle()));
     }

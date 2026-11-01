@@ -13,9 +13,9 @@ public:
 private:
     void loginLoop();
     void adminMenu(Administrator& user);
-    void studentMenu(Student& user);
-    void lecturerMenu(Lecturer& user);
-    void hodMenu(HeadOfDepartment& user);
+    void studentMenu(const Student& user);
+    void lecturerMenu(const Lecturer& user);
+    void hodMenu(const HeadOfDepartment& user);
 
     static int readInt(const std::string& prompt);
     static std::string readLine(const std::string& prompt);

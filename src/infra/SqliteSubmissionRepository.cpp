@@ -4,7 +4,7 @@ namespace lms {
 
 SqliteSubmissionRepository::SqliteSubmissionRepository(SqliteDatabase& db) : db_(db) {}
 
-Submission SqliteSubmissionRepository::mapRow(SqliteStatement& st) {
+Submission SqliteSubmissionRepository::mapRow(const SqliteStatement& st) {
     Submission s;
     s.id = st.columnInt(0);
     s.assignmentId = st.columnInt(1);

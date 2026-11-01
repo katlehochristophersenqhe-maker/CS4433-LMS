@@ -101,7 +101,7 @@ void ConsoleUI::adminMenu(Administrator&) {
     }
 }
 
-void ConsoleUI::studentMenu(Student& user) {
+void ConsoleUI::studentMenu(const Student& user) {
     while (true) {
         std::cout << "\n--- Student ---\n"
                   << "1. List my assignments\n2. Submit work\n"
@@ -139,7 +139,7 @@ void ConsoleUI::studentMenu(Student& user) {
     }
 }
 
-void ConsoleUI::lecturerMenu(Lecturer& user) {
+void ConsoleUI::lecturerMenu(const Lecturer& user) {
     while (true) {
         std::cout << "\n--- Lecturer ---\n"
                   << "1. Create assignment\n2. List submissions\n3. Mark submission\n"
@@ -189,7 +189,7 @@ void ConsoleUI::lecturerMenu(Lecturer& user) {
     }
 }
 
-void ConsoleUI::hodMenu(HeadOfDepartment& user) {
+void ConsoleUI::hodMenu(const HeadOfDepartment& user) {
     while (true) {
         std::cout << "\n--- Head of Department ---\n"
                   << "1. View marked submissions\n2. Moderate mark\n3. Release mark\n0. Logout\n";

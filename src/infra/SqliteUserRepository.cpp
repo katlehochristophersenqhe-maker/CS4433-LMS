@@ -4,7 +4,7 @@ namespace lms {
 
 SqliteUserRepository::SqliteUserRepository(SqliteDatabase& db) : db_(db) {}
 
-std::unique_ptr<User> SqliteUserRepository::mapRow(SqliteStatement& st) {
+std::unique_ptr<User> SqliteUserRepository::mapRow(const SqliteStatement& st) {
     const int id = st.columnInt(0);
     const std::string username = st.columnText(1);
     const std::string fullName = st.columnText(3);

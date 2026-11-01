@@ -31,7 +31,7 @@ private:
 // RAII prepared statement with parameter binding
 class SqliteStatement {
 public:
-    SqliteStatement(SqliteDatabase& db, const std::string& sql);
+    SqliteStatement(const SqliteDatabase& db, const std::string& sql);
     ~SqliteStatement();
 
     SqliteStatement(const SqliteStatement&) = delete;

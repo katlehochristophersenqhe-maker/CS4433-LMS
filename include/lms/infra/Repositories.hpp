@@ -32,7 +32,7 @@ public:
              int departmentId, const std::string& studentNumber) override;
 private:
     SqliteDatabase& db_;
-    std::unique_ptr<User> mapRow(SqliteStatement& st);
+    static std::unique_ptr<User> mapRow(const SqliteStatement& st);
 };
 
 class ISubmissionRepository {
@@ -63,7 +63,7 @@ public:
     void setStatus(int id, SubmissionStatus status) override;
 private:
     SqliteDatabase& db_;
-    Submission mapRow(SqliteStatement& st);
+    static Submission mapRow(const SqliteStatement& st);
 };
 
 class IAssignmentRepository {
