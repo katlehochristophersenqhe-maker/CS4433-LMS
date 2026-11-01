@@ -110,12 +110,16 @@ void ConsoleUI::studentMenu(const Student& user) {
         try {
             if (c == 0) return;
             if (c == 1) {
-                auto list = student_.listAssignments(user.id());
+                auto list = student_.listAssignmentsWithDeadlines(user.id());
                 if (list.empty()) std::cout << "(no assignments)\n";
-                for (const auto& a : list) {
-                    std::cout << "  [" << a.id << "] " << a.title
-                              << "  deadline=" << a.deadline
-                              << "  max=" << a.maxMark << "\n";
+                for (const auto& item : list) {
+                    const auto& assignment = item.assignment;
+                    std::cout << "  [" << assignment.id << "] " << assignment.title
+                              << "  deadline=" << assignment.deadline;
+                    if (item.effectiveDeadline != assignment.deadline) {
+                        std::cout << "  extended_to=" << item.effectiveDeadline;
+                    }
+                    std::cout << "  max=" << assignment.maxMark << "\n";
                 }
             } else if (c == 2) {
                 int aid = readInt("Assignment id: ");
@@ -143,7 +147,7 @@ void ConsoleUI::lecturerMenu(const Lecturer& user) {
     while (true) {
         std::cout << "\n--- Lecturer ---\n"
                   << "1. Create assignment\n2. List submissions\n3. Mark submission\n"
-                  << "4. Grant extension\n0. Logout\n";
+                  << "4. Grant extension\n5. Grant class extension\n0. Logout\n";
         int c = readInt("Choice: ");
         try {
             if (c == 0) return;
@@ -182,6 +186,12 @@ void ConsoleUI::lecturerMenu(const Lecturer& user) {
                 auto reason = readLine("Reason: ");
                 lecturer_.grantExtension(aid, stid, nd, reason, user.id());
                 std::cout << "Extension granted.\n";
+            } else if (c == 5) {
+                int aid = readInt("Assignment id: ");
+                auto nd = readLine("New deadline (YYYY-MM-DDTHH:MM:SSZ): ");
+                auto reason = readLine("Reason: ");
+                lecturer_.grantClassExtension(aid, nd, reason, user.id());
+                std::cout << "Class extension granted.\n";
             }
         } catch (const LmsError& e) {
             std::cout << "Error: " << e.what() << "\n";

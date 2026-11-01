@@ -16,6 +16,11 @@ std::string nowIso();
 // Days late: ceil of whole days after deadline (1 second late = 1 day).
 int daysLate(const std::string& deadlineIso, const std::string& submittedIso);
 
+struct StudentAssignmentView {
+    Assignment assignment;
+    std::string effectiveDeadline;
+};
+
 class AuthService {
 public:
     AuthService(IUserRepository& users, IPasswordHasher& hasher);
@@ -32,10 +37,13 @@ public:
                    IExtensionRepository& extensions, ICourseRepository& courses,
                    LatePenaltyStrategy& penalty);
     std::vector<Assignment> listAssignments(int studentId);
+    std::vector<StudentAssignmentView> listAssignmentsWithDeadlines(int studentId);
     std::vector<Submission> listReleasedSubmissions(int studentId);
     void submit(int studentId, int assignmentId, const std::string& content);
 
 private:
+    std::string effectiveDeadline(const Assignment& assignment, int studentId);
+
     IAssignmentRepository& assignments_;
     ISubmissionRepository& submissions_;
     IExtensionRepository& extensions_;
@@ -52,10 +60,16 @@ public:
                          const std::string& deadline, double maxMark);
     void grantExtension(int assignmentId, int studentId, const std::string& newDeadline,
                         const std::string& reason, int lecturerId);
+    void grantClassExtension(int assignmentId, const std::string& newDeadline,
+                             const std::string& reason, int lecturerId);
     void markSubmission(int submissionId, double rawMark, const std::string& feedback, int lecturerId);
     std::vector<Submission> listSubmissions(int assignmentId);
 
 private:
+    void saveExtension(int assignmentId, std::optional<int> studentId,
+                       const std::string& newDeadline, const std::string& reason,
+                       int lecturerId);
+
     IAssignmentRepository& assignments_;
     ISubmissionRepository& submissions_;
     IExtensionRepository& extensions_;

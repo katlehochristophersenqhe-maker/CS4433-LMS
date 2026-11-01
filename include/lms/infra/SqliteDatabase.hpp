@@ -23,6 +23,7 @@ public:
 
     // Run schema file (CREATE TABLE IF NOT EXISTS ...)
     void runSchemaFile(const std::string& path);
+    void ensureClassWideExtensionsSupported();
 
 private:
     sqlite3* db_ = nullptr;

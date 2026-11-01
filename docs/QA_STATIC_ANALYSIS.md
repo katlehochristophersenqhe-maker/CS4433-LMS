@@ -15,6 +15,7 @@ cppcheck --quiet --force --check-level=exhaustive --enable=all \
   --suppress=unusedFunction:include/lms/domain/User.hpp \
   --suppress=unusedFunction:include/lms/domain/Submission.hpp \
   --suppress=unusedFunction:src/infra/SqliteDatabase.cpp \
+  --suppress=unusedFunction:src/app/StudentService.cpp \
   -I include -I third_party \
   src 2> docs/cppcheck_report.txt
 ```
@@ -22,10 +23,10 @@ cppcheck --quiet --force --check-level=exhaustive --enable=all \
 **Run:** Cppcheck 2.21.0, exhaustive configuration and branch checks; exit code
 0 with no unsuppressed diagnostics. The SQLite amalgamation triggers
 `uninitMemberVarNoCtor` warnings in its public structs, so that checker is
-suppressed only for `third_party/sqlite3.h`. `unusedFunction` is suppressed
-only in `User.hpp`, `Submission.hpp`, and `SqliteDatabase.cpp` because these
-files contain public model or database helpers retained for API compatibility,
-some of which are not used by the current application executable.
+suppressed only for `third_party/sqlite3.h`. `unusedFunction` is suppressed only in `User.hpp`, `Submission.hpp`,
+`SqliteDatabase.cpp`, and `StudentService.cpp` because these files contain
+public model, database, or service APIs retained for compatibility, some of
+which are not used by the current application executable.
 
 The report is empty when there are no unsuppressed diagnostics:
 [cppcheck_report.txt](./cppcheck_report.txt).

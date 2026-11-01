@@ -1,4 +1,6 @@
 #include "lms/app/Services.hpp"
+#include <algorithm>
+#include <iterator>
 
 namespace lms {
 
@@ -10,6 +12,28 @@ StudentService::StudentService(IAssignmentRepository& assignments, ISubmissionRe
 
 std::vector<Assignment> StudentService::listAssignments(int studentId) {
     return assignments_.findForStudent(studentId);
+}
+
+std::vector<StudentAssignmentView> StudentService::listAssignmentsWithDeadlines(int studentId) {
+    const auto assignments = assignments_.findForStudent(studentId);
+    std::vector<StudentAssignmentView> views;
+    views.reserve(assignments.size());
+    std::transform(assignments.begin(), assignments.end(), std::back_inserter(views),
+                   [this, studentId](const Assignment& assignment) {
+                       return StudentAssignmentView{
+                           assignment, effectiveDeadline(assignment, studentId)};
+                   });
+    return views;
+}
+
+std::string StudentService::effectiveDeadline(const Assignment& assignment, int studentId) {
+    std::string deadline = assignment.deadline;
+    if (const auto extension = extensions_.latestFor(assignment.id, studentId)) {
+        if (extension->newDeadline > deadline) {
+            deadline = extension->newDeadline;
+        }
+    }
+    return deadline;
 }
 
 std::vector<Submission> StudentService::listReleasedSubmissions(int studentId) {
@@ -25,14 +49,8 @@ void StudentService::submit(int studentId, int assignmentId, const std::string& 
     if (!courses_.isEnrolled(studentId, assignment->courseId))
         throw ValidationError("You are not enrolled in this course");
 
-    // Effective deadline
-    std::string effective = assignment->deadline;
-    if (auto ext = extensions_.latestFor(assignmentId, studentId)) {
-        if (ext->newDeadline > effective) effective = ext->newDeadline;
-    }
-
     const std::string submittedAt = nowIso();
-    int late = daysLate(effective, submittedAt);
+    const int late = daysLate(effectiveDeadline(*assignment, studentId), submittedAt);
 
     Submission s;
     s.assignmentId = assignmentId;

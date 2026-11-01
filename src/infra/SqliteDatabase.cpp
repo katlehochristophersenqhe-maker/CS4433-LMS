@@ -44,6 +44,49 @@ void SqliteDatabase::runSchemaFile(const std::string& path) {
     exec(ss.str());
 }
 
+void SqliteDatabase::ensureClassWideExtensionsSupported() {
+    bool foundStudentId = false;
+    bool studentIdNotNull = false;
+    {
+        SqliteStatement columns(*this, "PRAGMA table_info(Extension)");
+        while (columns.step()) {
+            if (columns.columnText(1) == "student_id") {
+                foundStudentId = true;
+                studentIdNotNull = columns.columnInt(3) != 0;
+                break;
+            }
+        }
+    }
+
+    if (!foundStudentId) {
+        throw PersistenceError("Extension table is missing student_id column");
+    }
+    if (!studentIdNotNull) return;
+
+    exec("BEGIN IMMEDIATE;");
+    try {
+        exec(
+            "CREATE TABLE Extension_migration ("
+            " extension_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+            " assignment_id INTEGER NOT NULL REFERENCES Assignment(assignment_id),"
+            " student_id INTEGER REFERENCES User(user_id),"
+            " new_deadline TEXT NOT NULL,"
+            " reason TEXT NOT NULL,"
+            " granted_by INTEGER NOT NULL REFERENCES User(user_id)"
+            ");"
+            "INSERT INTO Extension_migration "
+            "(extension_id, assignment_id, student_id, new_deadline, reason, granted_by) "
+            "SELECT extension_id, assignment_id, student_id, new_deadline, reason, granted_by "
+            "FROM Extension;"
+            "DROP TABLE Extension;"
+            "ALTER TABLE Extension_migration RENAME TO Extension;"
+            "COMMIT;");
+    } catch (...) {
+        exec("ROLLBACK;");
+        throw;
+    }
+}
+
 // ---- Statement ----
 
 SqliteStatement::SqliteStatement(const SqliteDatabase& db, const std::string& sql) {

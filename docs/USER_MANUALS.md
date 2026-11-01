@@ -1,4 +1,4 @@
-# User manuals – Moderated LMS v1.0
+# User manuals – Moderated LMS (updated for planned v1.1)
 
 Start the program (`lms` or `lms.exe`). At the prompt enter username and password. Type `quit` to exit.
 
@@ -30,6 +30,7 @@ Start the program (`lms` or `lms.exe`). At the prompt enter username and passwor
 | List submissions | See work for an assignment |
 | Mark submission | Enter numeric mark and **written feedback** (required) |
 | Grant extension | New deadline for one student with a reason |
+| Grant class extension | New deadline for all students on an assignment, with a reason |
 | Logout | Return to login |
 
 **Rules:** Marks are not visible to students until the HoD releases them. Late work is penalised automatically when marked.
@@ -57,7 +58,7 @@ Start the program (`lms` or `lms.exe`). At the prompt enter username and passwor
 
 | Menu option | What it does |
 |-------------|--------------|
-| List my assignments | See assignments for enrolled courses |
+| List my assignments | See assignments for enrolled courses, including the effective extended deadline when applicable |
 | Submit work | Enter text for an assignment (resubmit allowed before deadline) |
 | Logout | Return to login |
 

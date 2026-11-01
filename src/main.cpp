@@ -42,6 +42,7 @@ int main(int argc, char** argv) {
 
         lms::SqliteDatabase db(dbPath);
         db.runSchemaFile(schemaPath);
+        db.ensureClassWideExtensionsSupported();
 
         lms::Sha256PasswordHasher hasher;
         lms::StandardLatePenaltyStrategy penalty;

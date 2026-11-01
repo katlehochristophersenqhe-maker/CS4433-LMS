@@ -25,6 +25,17 @@ int LecturerService::createAssignment(int courseId, const std::string& title,
 void LecturerService::grantExtension(int assignmentId, int studentId,
                                      const std::string& newDeadline, const std::string& reason,
                                      int lecturerId) {
+    saveExtension(assignmentId, studentId, newDeadline, reason, lecturerId);
+}
+
+void LecturerService::grantClassExtension(int assignmentId, const std::string& newDeadline,
+                                          const std::string& reason, int lecturerId) {
+    saveExtension(assignmentId, std::nullopt, newDeadline, reason, lecturerId);
+}
+
+void LecturerService::saveExtension(int assignmentId, std::optional<int> studentId,
+                                    const std::string& newDeadline, const std::string& reason,
+                                    int lecturerId) {
     if (reason.empty()) throw ValidationError("Extension reason is required");
     auto assignment = assignments_.findById(assignmentId);
     if (!assignment) throw ValidationError("Assignment not found");

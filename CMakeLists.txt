@@ -74,13 +74,20 @@ add_executable(lms_tests
   tests/test_password_hasher.cpp
   tests/test_user_factory.cpp
   tests/test_integration_auth.cpp
+  tests/test_cr1_extensions.cpp
   src/domain/LatePenaltyStrategy.cpp
   src/domain/User.cpp
   src/infra/PasswordHasher.cpp
   src/infra/SqliteDatabase.cpp
   src/infra/SqliteUserRepository.cpp
+  src/infra/SqliteSubmissionRepository.cpp
+  src/infra/SqliteAssignmentRepository.cpp
+  src/infra/SqliteExtensionRepository.cpp
   src/infra/SqliteCourseRepository.cpp
+  src/infra/SqliteAuditRepository.cpp
   src/app/AuthService.cpp
+  src/app/StudentService.cpp
+  src/app/LecturerService.cpp
   src/app/AdminService.cpp
 )
 target_include_directories(lms_tests PRIVATE include third_party tests)
