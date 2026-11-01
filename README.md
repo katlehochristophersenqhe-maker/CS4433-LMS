@@ -5,27 +5,14 @@ National University of Lesotho · C++17 · SQLite · CMake
 
 ## Quick start
 
-```bash
-# Compile SQLite as C, then link the application (PowerShell)
-New-Item -ItemType Directory -Force build | Out-Null
-gcc -c third_party/sqlite3.c -o build/sqlite3.o -DSQLITE_THREADSAFE=1 -O2
-g++ -std=c++17 -I include -I third_party -O2 src/domain/*.cpp src/infra/*.cpp src/app/*.cpp src/ui/ConsoleUI.cpp src/main.cpp build/sqlite3.o -o build/lms
-
-cp sql/schema.sql build/
-cd build
-./lms
-```
-
-The command above works with MinGW on Windows. On Linux,append `-lpthread -ldl` to the `g++` command if your SQLite build needs them.
-
-Or with CMake (recommended):
-
 ```powershell
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build --parallel
 Set-Location build
 .\lms.exe
 ```
+
+For Linux or macOS, run the same CMake commands and launch `./build/lms`.
 
 For a fresh presentation database, run this from the project root after
 building:
@@ -57,24 +44,20 @@ filename to get the updated sample data.
 - Abstract `User` + inheritance + `UserFactory`  
 - Late-penalty **Strategy** (10 % / day, max 3 days → 0)  
 - **Repository/DAO** layer; all SQL parameterised  
-- Extensions (individual), resubmission before deadline  
+- Individual and class-wide deadline extensions; individual extensions take
+  precedence, and students see the effective deadline
 - Marking with written feedback; marks hidden until HoD release  
+- Lecturer submission browsing and HoD access to released marks
 - **Audit log** (who, when, old, new, reason)  
-- Salted password hashes (portable SHA-256; interface ready for Argon2)  
+- Salted password hashes (portable SHA-256; replace with a memory-hard KDF for
+  production credential storage)
 - Exceptions + validation; menu-driven console UI  
 - Offline SQLite persistence  
 
 ## Layout
 
-```
-lms/
-  include/lms/{domain,app,infra,ui}/
-  src/{domain,app,infra,ui}/
-  sql/schema.sql
-  third_party/sqlite3.{c,h}   # amalgamation
-  docs/BUILD.md
-  CMakeLists.txt
-```
+The repository root contains `include/`, `src/`, `sql/`, `third_party/`,
+`tests/`, `docs/`, and `CMakeLists.txt`.
 
 See `docs/BUILD.md` for design mapping and coding notes.
 
@@ -88,36 +71,9 @@ The Phase 5 tests are in `tests/`. The test target is defined in
 ```powershell
 cmake -S . -B build-tests
 cmake --build build-tests --target lms_tests
-.\build-tests\lms_tests.exe
+ctest --test-dir build-tests --output-on-failure
 ```
 
-Expected result:
-
-```text
-All tests passed (42 assertions in 21 test cases)
-```
-
-### MinGW fallback on Windows
-
-If CMake fails while detecting the MinGW compiler, compile the test target
-directly with the installed MinGW tools:
-
-```powershell
-New-Item -ItemType Directory -Force build-phase5 | Out-Null
-gcc -c third_party/sqlite3.c -o build-phase5/sqlite3_test.o -DSQLITE_THREADSAFE=1 -DSQLITE_ENABLE_RTREE=0
-g++ -std=c++17 -Wall -Wextra -Wpedantic -Iinclude -Ithird_party -Itests `
-  tests/test_late_penalty.cpp `
-  tests/test_password_hasher.cpp `
-  tests/test_user_factory.cpp `
-  tests/test_integration_auth.cpp `
-  src/domain/LatePenaltyStrategy.cpp `
-  src/domain/User.cpp `
-  src/infra/PasswordHasher.cpp `
-  src/infra/SqliteDatabase.cpp `
-  src/infra/SqliteUserRepository.cpp `
-  src/infra/SqliteCourseRepository.cpp `
-  src/app/AuthService.cpp `
-  src/app/AdminService.cpp `
-  build-phase5/sqlite3_test.o -o build-phase5/lms_tests.exe
-.\build-phase5\lms_tests.exe
-```
+The verified Windows/MinGW run reported 26 test cases and 74 assertions.
+CTest runs the `lms_tests` target. See `docs/BUILD.md` for the full build and
+test instructions.

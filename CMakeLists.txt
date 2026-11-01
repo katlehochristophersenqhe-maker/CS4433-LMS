@@ -88,6 +88,7 @@ add_executable(lms_tests
   src/app/AuthService.cpp
   src/app/StudentService.cpp
   src/app/LecturerService.cpp
+  src/app/HoDService.cpp
   src/app/AdminService.cpp
 )
 target_include_directories(lms_tests PRIVATE include third_party tests)

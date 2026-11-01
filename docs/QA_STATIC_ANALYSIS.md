@@ -37,16 +37,15 @@ internal implementation and macro-generated test functions.
 
 ## 2. Code metrics
 
-Approximate sizes for the Moderated LMS (re-count after final freeze):
+Measured physical source lines in the current repository snapshot:
 
-| Component | Approx. lines |
-|-----------|----------------|
-| Domain (User, penalty, types) | ~400 |
-| Infrastructure (SQLite, hasher, repos) | ~1200 |
-| Application services | ~500 |
-| Console UI + main | ~400 |
-| Tests | ~300+ |
-| **Total application source** | **~2500–3500** |
+| Component | Lines |
+|-----------|-------|
+| Application source: 28 `.cpp`, `.hpp`, and `.h` files in `src/` and `include/` | 1,869 |
+| Test source: five `.cpp` files; excludes `tests/catch.hpp` | 367 |
+
+These are physical line counts and include blank lines and comments. They are
+not a complexity measure.
 
 Cyclomatic complexity focus:
 - `StandardLatePenaltyStrategy::apply` – low (few branches)

@@ -4,28 +4,32 @@
 
 - C++17 compiler (g++ 9+ or clang++)
 - CMake 3.16+
-- C++17 compiler only
 - SQLite is **bundled** (amalgamation in `third_party/`)
 
 ## Build
 
-```bash
-cd lms
+```powershell
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-cmake --build build -j
+cmake --build build --parallel
+Set-Location build
+.\lms.exe
 ```
 
-The executable is `build/lms`. The schema file is copied to `build/schema.sql`.
+Run these commands from the repository root. The executable is `build/lms.exe`
+on Windows (`build/lms` on Linux/macOS); CMake copies the schema to
+`build/schema.sql`.
 
-## Run
+To run on Linux/macOS:
 
 ```bash
-cd build
-./lms            # uses ./lms.db and ./schema.sql
-./lms /path/to/other.db
+./build/lms
+./build/lms /path/to/other.db
 ```
 
-On first run the database is created and seeded with demo accounts:
+On Windows PowerShell, run `Set-Location build` and then `.\lms.exe`; use
+separate commands rather than `&&` in Windows PowerShell 5.
+
+On first run, the database is created and seeded with demo accounts:
 
 | Username | Password  | Role            |
 |----------|-----------|-----------------|
@@ -33,6 +37,19 @@ On first run the database is created and seeded with demo accounts:
 | hod1     | hod123    | Head of Department |
 | lec1     | lec123    | Lecturer        |
 | stu1     | stu123    | Student         |
+
+## Tests
+
+From the repository root:
+
+```powershell
+cmake -S . -B build-tests -DCMAKE_BUILD_TYPE=Release
+cmake --build build-tests --target lms_tests --parallel
+ctest --test-dir build-tests --output-on-failure
+```
+
+The verified Windows/MinGW suite reported 26 test cases and 74 assertions.
+CTest runs the single `lms_tests` target.
 
 ## Design mapping
 
@@ -49,7 +66,7 @@ On first run the database is created and seeded with demo accounts:
 
 ## Password hashing justification
 
-Passwords are stored only as **salted SHA-256 hashes** (format `saltHex$digestHex`) using a portable built-in implementation — no OpenSSL or other crypto library is required. This meets the assignment rule that passwords must never be stored in plain text. Argon2id is preferred for high-security production systems; the `IPasswordHasher` interface allows swapping the algorithm without changing services.
+Passwords are stored as **salted SHA-256 hashes** (format `saltHex$digestHex`) using a portable built-in implementation — no OpenSSL or other crypto library is required. This avoids plaintext storage but SHA-256 is not a slow password-hashing scheme and is not suitable for production credential storage. Argon2id or another memory-hard password KDF is recommended for real deployments; the `IPasswordHasher` interface allows the algorithm to be replaced.
 
 
 ## Coding standard

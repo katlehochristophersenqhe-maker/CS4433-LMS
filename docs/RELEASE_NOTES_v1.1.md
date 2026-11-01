@@ -1,7 +1,11 @@
-# Release Notes – Moderated LMS v1.1
+# Release Notes â€“ Moderated LMS v1.1
 
-**Status:** Draft — implementation is complete, but v1.1 has not been tagged or published.
+**Status:** Published
 **Change request:** CR1
+
+The `v1.1` tag points to commit
+`81afa92567b43348c17821092a37c328f0df8c2c`. The Windows x64 release archive is
+available from the [GitHub release page](https://github.com/katlehochristophersenqhe-maker/CS4433-LMS/releases/tag/v1.1).
 
 ## What is new
 
@@ -24,3 +28,7 @@ Back up `lms.db` before upgrading. On startup, the application checks the
 `Extension.student_id` constraint and rebuilds the table transactionally if it
 is `NOT NULL`. Existing extension rows and IDs are preserved. The migration is
 idempotent. Verify the backup before using it in production.
+
+Changes made on `main` after the `v1.1` tag, including lecturer-wide submission
+browsing and expanded presentation sample data, are not included in this
+release.

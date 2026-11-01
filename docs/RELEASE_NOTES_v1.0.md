@@ -1,7 +1,11 @@
 # Release Notes – Moderated LMS v1.0
 
-**Status:** Draft — v1.0 has not been tagged or published.
+**Status:** Published
+
 **Repository:** https://github.com/katlehochristophersenqhe-maker/CS4433-LMS
+
+The `v1.0` tag points to commit
+`39e592c27ea6cbc388cf7690ae3ddee04d53c95b`.
 
 ## Summary
 
@@ -37,4 +41,6 @@ See **docs/INSTALLATION.md**.
 
 ## Upgrade path
 
-Future changes (e.g. class-wide extensions in v1.1) will be tagged separately. Backup `lms.db` before upgrading.
+Class-wide deadline extensions and their legacy-schema migration were released
+in v1.1; see [RELEASE_NOTES_v1.1.md](./RELEASE_NOTES_v1.1.md). Back up `lms.db`
+before upgrading.

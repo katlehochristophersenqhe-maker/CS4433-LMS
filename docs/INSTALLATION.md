@@ -12,25 +12,25 @@
 
 ## 2. Get the software
 
-The `v1.0` release tag has not been published yet. To build the current project,
-clone the repository and use its default branch:
+The `v1.1` release is published, including a Windows x64 archive. Download it
+from the [GitHub release page](https://github.com/katlehochristophersenqhe-maker/CS4433-LMS/releases/tag/v1.1)
+for a packaged build. To build from source, clone the repository and use its
+default branch:
 
 ```bash
 git clone https://github.com/katlehochristophersenqhe-maker/CS4433-LMS.git
 cd CS4433-LMS
 ```
 
-When a versioned release is published, you can instead check out its tag (for
-example, `git checkout v1.0`). Alternatively, unzip a published release
-archive and open a terminal in that folder.
+To build a tagged version from source, check out its tag (for example,
+`git checkout v1.1`). Alternatively, unzip the published release archive and
+open a terminal in that folder.
 
 ## 3. Build
 
 ```bash
-mkdir build
-cd build
-cmake .. -DCMAKE_BUILD_TYPE=Release
-cmake --build .
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build
 ```
 
 Alternative without CMake (MinGW / Git Bash):
@@ -53,7 +53,13 @@ cd build
 ./lms
 ```
 
-(or `lms.exe` on Windows)
+On Windows PowerShell, use separate commands (Windows PowerShell 5 does not
+support `&&`):
+
+```powershell
+Set-Location build
+.\lms.exe
+```
 
 - The program creates `lms.db` in the current folder.
 - On first run it seeds demo accounts (see user manuals).

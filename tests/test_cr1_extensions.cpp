@@ -1,36 +1,44 @@
 #include "catch.hpp"
 #include "lms/app/Services.hpp"
 #include "lms/infra/Repositories.hpp"
+#include <algorithm>
 #include <cstdio>
 #include <filesystem>
+#include <utility>
 
 using namespace lms;
 
 namespace {
 
 struct TestDatabaseCleanup {
-    const std::string path = "test_cr1.db";
-
-    TestDatabaseCleanup() {
+    explicit TestDatabaseCleanup(std::string file, bool removeOnDestruction = true)
+        : path(std::move(file)), removeOnDestruction(removeOnDestruction) {
         std::remove(path.c_str());
     }
+    const std::string path;
+    const bool removeOnDestruction;
 
     ~TestDatabaseCleanup() {
-        std::remove(path.c_str());
+        if (removeOnDestruction) {
+            std::remove(path.c_str());
+        }
     }
 };
 
 class Cr1Fixture {
 public:
-    Cr1Fixture()
-        : db_(cleanup_.path),
+    explicit Cr1Fixture(const std::string& dbPath = "test_cr1.db",
+                        bool removeDatabaseOnDestruction = true)
+        : cleanup_(dbPath, removeDatabaseOnDestruction),
+          db_(cleanup_.path),
           assignments_(db_),
           submissions_(db_),
           extensions_(db_),
           audit_(db_),
           courses_(db_),
           student_(assignments_, submissions_, extensions_, courses_, penalty_),
-          lecturer_(assignments_, submissions_, extensions_, audit_, penalty_) {
+          lecturer_(assignments_, submissions_, extensions_, audit_, penalty_),
+          hod_(submissions_, audit_) {
         const std::string schemaPath = std::filesystem::exists("sql/schema.sql")
             ? "sql/schema.sql"
             : "../sql/schema.sql";
@@ -39,6 +47,8 @@ public:
             "INSERT INTO Department (department_id, name) VALUES (1, 'Mathematics');"
             "INSERT INTO User (user_id, username, password_hash, full_name, role, department_id) "
             "VALUES (10, 'lecturer', 'unused', 'Lecturer', 'Lecturer', 1);"
+            "INSERT INTO User (user_id, username, password_hash, full_name, role, department_id) "
+            "VALUES (11, 'hod', 'unused', 'HoD', 'HoD', 1);"
             "INSERT INTO User (user_id, username, password_hash, full_name, role) "
             "VALUES (20, 'student', 'unused', 'Student', 'Student');"
             "INSERT INTO Course (course_id, department_id, code, title, lecturer_id) "
@@ -58,8 +68,10 @@ public:
 
     SqliteExtensionRepository& extensions() { return extensions_; }
     SqliteSubmissionRepository& submissions() { return submissions_; }
+    SqliteAuditRepository& audit() { return audit_; }
     StudentService& student() { return student_; }
     LecturerService& lecturer() { return lecturer_; }
+    HoDService& hod() { return hod_; }
 
 private:
     TestDatabaseCleanup cleanup_;
@@ -72,6 +84,7 @@ private:
     StandardLatePenaltyStrategy penalty_;
     StudentService student_;
     LecturerService lecturer_;
+    HoDService hod_;
 };
 
 } // namespace
@@ -217,4 +230,97 @@ TEST_CASE("CR1 – startup migrates legacy extension tables and preserves rows",
         REQUIRE(migratedRow.columnIsNull(0));
     }
     std::remove(path.c_str());
+}
+
+TEST_CASE("System – resubmission replaces unmarked work but is rejected after marking",
+          "[system][submission]") {
+    Cr1Fixture fixture;
+    const auto assignment = fixture.makeAssignment("2099-01-01T00:00:00Z");
+
+    fixture.student().submit(20, assignment.id, "First version");
+    const auto first = fixture.submissions().findFor(assignment.id, 20);
+    REQUIRE(first.has_value());
+
+    fixture.student().submit(20, assignment.id, "Revised version");
+    const auto revised = fixture.submissions().findFor(assignment.id, 20);
+    REQUIRE(revised.has_value());
+    REQUIRE(revised->id == first->id);
+    REQUIRE(revised->content == "Revised version");
+    REQUIRE(revised->status == SubmissionStatus::Submitted);
+
+    fixture.lecturer().markSubmission(revised->id, 85.0, "Good work", 10);
+    REQUIRE_THROWS(fixture.student().submit(20, assignment.id, "Late revision"));
+    const auto marked = fixture.submissions().findFor(assignment.id, 20);
+    REQUIRE(marked.has_value());
+    REQUIRE(marked->content == "Revised version");
+    REQUIRE(marked->status == SubmissionStatus::Marked);
+}
+
+TEST_CASE("System – marked work remains hidden until HoD release",
+          "[system][marks][release]") {
+    Cr1Fixture fixture;
+    const auto assignment = fixture.makeAssignment("2099-01-01T00:00:00Z");
+    fixture.student().submit(20, assignment.id, "Assessment work");
+    const auto submission = fixture.submissions().findFor(assignment.id, 20);
+    REQUIRE(submission.has_value());
+
+    REQUIRE(fixture.student().listReleasedSubmissions(20).empty());
+    fixture.lecturer().markSubmission(submission->id, 76.0, "Well done", 10);
+    REQUIRE(fixture.student().listReleasedSubmissions(20).empty());
+
+    fixture.hod().release(submission->id);
+    const auto released = fixture.student().listReleasedSubmissions(20);
+    REQUIRE(released.size() == 1);
+    REQUIRE(released[0].id == submission->id);
+    REQUIRE(released[0].isVisibleToStudent());
+    REQUIRE(released[0].finalMark == 76.0);
+    REQUIRE(released[0].feedback == "Well done");
+}
+
+TEST_CASE("System – mark-change audit records persist across database reopen",
+          "[system][audit]") {
+    const std::string path = "test_audit_persistence.db";
+    TestDatabaseCleanup cleanup(path);
+    int submissionId = 0;
+
+    {
+        Cr1Fixture fixture(path, false);
+        const auto assignment = fixture.makeAssignment("2099-01-01T00:00:00Z");
+        fixture.student().submit(20, assignment.id, "Assessment work");
+        const auto submission = fixture.submissions().findFor(assignment.id, 20);
+        REQUIRE(submission.has_value());
+        submissionId = submission->id;
+
+        fixture.lecturer().markSubmission(submissionId, 72.0, "Initial mark", 10);
+        fixture.hod().moderate(submissionId, 68.0, "Correction after review", 11);
+
+        const auto auditEntries = fixture.audit().findBySubmission(submissionId);
+        REQUIRE(auditEntries.size() == 2);
+    }
+
+    {
+        SqliteDatabase reopened(path);
+        SqliteAuditRepository audit(reopened);
+        const auto entries = audit.findBySubmission(submissionId);
+        REQUIRE(entries.size() == 2);
+        const auto initialMark = std::find_if(entries.begin(), entries.end(),
+            [](const AuditEntry& entry) {
+                return entry.reason == "Initial mark by lecturer";
+            });
+        REQUIRE(initialMark != entries.end());
+        REQUIRE(initialMark->submissionId == submissionId);
+        REQUIRE(initialMark->changedBy == 10);
+        REQUIRE_FALSE(initialMark->oldMark.has_value());
+        REQUIRE(initialMark->newMark == 72.0);
+
+        const auto moderation = std::find_if(entries.begin(), entries.end(),
+            [](const AuditEntry& entry) {
+                return entry.reason == "Correction after review";
+            });
+        REQUIRE(moderation != entries.end());
+        REQUIRE(moderation->submissionId == submissionId);
+        REQUIRE(moderation->changedBy == 11);
+        REQUIRE(moderation->oldMark == 72.0);
+        REQUIRE(moderation->newMark == 68.0);
+    }
 }
