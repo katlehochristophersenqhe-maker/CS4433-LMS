@@ -48,7 +48,7 @@ cmake --build build-tests --target lms_tests --parallel
 ctest --test-dir build-tests --output-on-failure
 ```
 
-The verified Windows/MinGW suite reported 26 test cases and 74 assertions.
+The verified Windows/MinGW suite reported 29 test cases and 104 assertions.
 CTest runs the single `lms_tests` target.
 
 ## Design mapping
