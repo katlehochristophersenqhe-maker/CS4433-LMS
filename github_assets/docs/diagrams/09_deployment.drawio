@@ -1,0 +1,43 @@
+<mxfile host="app.diagrams.net" modified="2026-11-02T00:00:00.000Z" agent="CS4433-LMS" version="22.1.0">
+  <diagram id="Deployment" name="Deployment">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="t" value="Figure – UML Deployment Diagram · Moderated LMS" style="text;html=1;fontSize=16;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="20" width="500" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ws" value="«device»&#xa;School Workstation" style="verticalAlign=top;align=left;shape=cube;size=12;direction=south;html=1;spacingLeft=8;fillColor=#f5f5f5;" vertex="1" parent="1">
+          <mxGeometry x="40" y="70" width="420" height="420" as="geometry" />
+        </mxCell>
+        <mxCell id="proc" value="«execution environment»&#xa;Moderated LMS Process" style="rounded=0;whiteSpace=wrap;html=1;align=left;spacingLeft=8;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="60" y="120" width="370" height="340" as="geometry" />
+        </mxCell>
+        <mxCell id="exe" value="«artifact»&#xa;lms.exe (C++17 application)&#xa;Console UI · Services · Domain · Repositories" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="90" y="180" width="300" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="sch" value="«artifact»&#xa;schema.sql" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="90" y="280" width="300" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="db" value="«artifact»&#xa;lms.db (SQLite database)&#xa;Users · Courses · Submissions · Audit_Log" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="90" y="360" width="300" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="users" value="«node»&#xa;School Users&#xa;• Administrator&#xa;• Lecturer&#xa;• HoD&#xa;• Student" style="rounded=0;whiteSpace=wrap;html=1;align=left;spacingLeft=8;fillColor=#fff2cc;" vertex="1" parent="1">
+          <mxGeometry x="520" y="140" width="220" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="bak" value="«device»&#xa;Backup Storage&#xa;(USB / school server)&#xa;«artifact» copy of lms.db" style="rounded=0;whiteSpace=wrap;html=1;align=left;spacingLeft=8;fillColor=#dae8fc;" vertex="1" parent="1">
+          <mxGeometry x="520" y="320" width="220" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" value="reads on first run" style="endArrow=block;html=1;endFill=1;" edge="1" parent="1" source="exe" target="sch"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e2" value="«deploy» read/write" style="endArrow=block;html=1;endFill=1;" edge="1" parent="1" source="exe" target="db"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e3" value="console I/O" style="endArrow=block;html=1;endFill=1;" edge="1" parent="1" source="ws" target="users"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e4" value="manual copy" style="endArrow=block;html=1;endFill=1;dashed=1;" edge="1" parent="1" source="ws" target="bak"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="n" value="Offline deployment: one process, one SQLite file. No mandatory network node." style="text;html=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="510" width="600" height="30" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,48 @@
+<mxfile host="app.diagrams.net" modified="2026-11-02T00:00:00.000Z" agent="CS4433-LMS" version="22.1.0">
+  <diagram id="ERD" name="ERD">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="t" value="Figure – Entity-Relationship Diagram (3NF)" style="text;html=1;fontSize=16;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="20" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="dept" value="Department&#xa;PK department_id&#xa;name" style="swimlane;align=left;spacingLeft=5;fillColor=#dae8fc;" vertex="1" parent="1">
+          <mxGeometry x="40" y="70" width="160" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="user" value="User&#xa;PK user_id&#xa;username&#xa;password_hash&#xa;role&#xa;FK department_id" style="swimlane;align=left;spacingLeft=5;fillColor=#fff2cc;" vertex="1" parent="1">
+          <mxGeometry x="260" y="60" width="180" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="course" value="Course&#xa;PK course_id&#xa;FK department_id&#xa;code title&#xa;FK lecturer_id" style="swimlane;align=left;spacingLeft=5;fillColor=#d5e8d4;" vertex="1" parent="1">
+          <mxGeometry x="500" y="70" width="180" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="enr" value="Enrolment&#xa;PK student_id&#xa;PK course_id" style="swimlane;align=left;spacingLeft=5;fillColor=#e1d5e7;" vertex="1" parent="1">
+          <mxGeometry x="740" y="70" width="160" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="asg" value="Assignment&#xa;PK assignment_id&#xa;FK course_id&#xa;title deadline max_mark" style="swimlane;align=left;spacingLeft=5;fillColor=#d5e8d4;" vertex="1" parent="1">
+          <mxGeometry x="40" y="280" width="200" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="sub" value="Submission&#xa;PK submission_id&#xa;FK assignment_id&#xa;FK student_id&#xa;status marks&#xa;UNIQUE(asg,stu)" style="swimlane;align=left;spacingLeft=5;fillColor=#f8cecc;" vertex="1" parent="1">
+          <mxGeometry x="300" y="270" width="200" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="ext" value="Extension&#xa;PK extension_id&#xa;FK assignment_id&#xa;FK student_id NULL&#xa;new_deadline reason" style="swimlane;align=left;spacingLeft=5;fillColor=#ffe6cc;" vertex="1" parent="1">
+          <mxGeometry x="560" y="280" width="200" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="aud" value="Audit_Log&#xa;PK log_id&#xa;FK submission_id&#xa;FK changed_by&#xa;old/new mark reason" style="swimlane;align=left;spacingLeft=5;fillColor=#e1d5e7;" vertex="1" parent="1">
+          <mxGeometry x="800" y="280" width="180" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="r1" style="endArrow=none;html=1;" edge="1" parent="1" source="dept" target="user"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="r2" style="endArrow=none;html=1;" edge="1" parent="1" source="dept" target="course"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="r3" style="endArrow=none;html=1;" edge="1" parent="1" source="course" target="asg"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="r4" style="endArrow=none;html=1;" edge="1" parent="1" source="asg" target="sub"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="r5" style="endArrow=none;html=1;" edge="1" parent="1" source="sub" target="aud"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="r6" style="endArrow=none;html=1;" edge="1" parent="1" source="asg" target="ext"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="n" value="Extension.student_id NULL = class-wide (CR1). Audit_Log append-only." style="text;html=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="450" width="500" height="30" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

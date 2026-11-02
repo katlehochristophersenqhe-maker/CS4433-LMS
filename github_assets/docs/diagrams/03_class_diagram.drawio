@@ -1,0 +1,62 @@
+<mxfile host="app.diagrams.net" modified="2026-11-02T00:00:00.000Z" agent="CS4433-LMS" version="22.1.0">
+  <diagram id="ClassDiagram" name="ClassDiagram">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="t" value="Figure – Class Diagram (core) · Strategy · Repository · Factory" style="text;html=1;fontSize=16;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="20" width="600" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="user" value="«abstract» User&#xa;----------&#xa;+id&#xa;+username&#xa;+fullName&#xa;----------&#xa;+getRole()&#xa;+clone()" style="swimlane;fontStyle=0;align=left;spacingLeft=5;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="70" width="180" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="stu" value="Student&#xa;+studentNumber" style="swimlane;align=left;spacingLeft=5;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="20" y="260" width="140" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="lec" value="Lecturer&#xa;+departmentId" style="swimlane;align=left;spacingLeft=5;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="180" y="260" width="140" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="hod" value="HoD&#xa;+departmentId" style="swimlane;align=left;spacingLeft=5;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="20" y="360" width="140" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="adm" value="Administrator" style="swimlane;align=left;spacingLeft=5;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="180" y="360" width="140" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="i1" style="endArrow=block;endFill=0;html=1;" edge="1" parent="1" source="stu" target="user"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="i2" style="endArrow=block;endFill=0;html=1;" edge="1" parent="1" source="lec" target="user"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="i3" style="endArrow=block;endFill=0;html=1;" edge="1" parent="1" source="hod" target="user"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="i4" style="endArrow=block;endFill=0;html=1;" edge="1" parent="1" source="adm" target="user"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lps" value="«interface»&#xa;LatePenaltyStrategy&#xa;+apply()&#xa;+penaltyAmount()" style="swimlane;align=left;spacingLeft=5;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="380" y="70" width="200" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="std" value="StandardLatePenaltyStrategy&#xa;10%/day, max 3 days → 0" style="swimlane;align=left;spacingLeft=5;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="380" y="200" width="200" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="i5" style="endArrow=block;endFill=0;html=1;" edge="1" parent="1" source="std" target="lps"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="fac" value="UserFactory&#xa;+create(role,...): User*" style="swimlane;align=left;spacingLeft=5;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="380" y="300" width="200" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="sub" value="Submission&#xa;+status +rawMark +finalMark&#xa;+daysLate +feedback" style="swimlane;align=left;spacingLeft=5;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="640" y="70" width="220" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="asg" value="Assignment&#xa;+title +deadline +maxMark" style="swimlane;align=left;spacingLeft=5;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="640" y="200" width="220" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="ext" value="Extension&#xa;+studentId (nullable)&#xa;+newDeadline +reason" style="swimlane;align=left;spacingLeft=5;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="640" y="310" width="220" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="aud" value="AuditEntry&#xa;+oldMark +newMark +reason" style="swimlane;align=left;spacingLeft=5;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="640" y="430" width="220" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="irep" value="«interface»&#xa;IUserRepository&#xa;ISubmissionRepository&#xa;IAssignmentRepository" style="swimlane;align=left;spacingLeft=5;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="40" y="480" width="220" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="srep" value="Sqlite*Repository&#xa;parameterised SQL" style="swimlane;align=left;spacingLeft=5;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="300" y="480" width="200" height="80" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

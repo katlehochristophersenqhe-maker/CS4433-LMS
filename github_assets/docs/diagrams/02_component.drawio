@@ -1,0 +1,60 @@
+<mxfile host="app.diagrams.net" modified="2026-11-02T00:00:00.000Z" agent="CS4433-LMS" version="22.1.0">
+  <diagram id="Component" name="Component">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="t" value="Figure – Component Diagram" style="text;html=1;fontSize=16;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="20" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ui" value="ConsoleUI&#xa;«component»" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="100" width="140" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="auth" value="AuthService" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="260" y="60" width="140" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="admin" value="AdminService" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="260" y="130" width="140" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="lec" value="LecturerService" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="260" y="200" width="140" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="hod" value="HoDService" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="260" y="270" width="140" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="stu" value="StudentService" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="260" y="340" width="140" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="urep" value="UserRepository&#xa;«interface»" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="480" y="80" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="srep" value="SubmissionRepository&#xa;«interface»" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="480" y="180" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="arep" value="Assignment / Extension&#xa;Repositories" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="480" y="280" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="db" value="SQLite&#xa;lms.db" style="shape=cylinder3;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;size=15;" vertex="1" parent="1">
+          <mxGeometry x="720" y="180" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="strat" value="LatePenaltyStrategy&#xa;«strategy»" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="40" y="420" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="fac" value="UserFactory&#xa;«factory»" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="260" y="420" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" style="endArrow=block;html=1;endFill=1;" edge="1" parent="1" source="ui" target="auth"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e2" style="endArrow=block;html=1;endFill=1;" edge="1" parent="1" source="ui" target="admin"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e3" style="endArrow=block;html=1;endFill=1;" edge="1" parent="1" source="ui" target="lec"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e4" style="endArrow=block;html=1;endFill=1;" edge="1" parent="1" source="ui" target="hod"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e5" style="endArrow=block;html=1;endFill=1;" edge="1" parent="1" source="ui" target="stu"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e6" style="endArrow=block;html=1;endFill=1;" edge="1" parent="1" source="auth" target="urep"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e7" style="endArrow=block;html=1;endFill=1;" edge="1" parent="1" source="lec" target="srep"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e8" style="endArrow=block;html=1;endFill=1;" edge="1" parent="1" source="srep" target="db"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e9" style="endArrow=block;html=1;endFill=1;" edge="1" parent="1" source="urep" target="db"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,39 @@
+<mxfile host="app.diagrams.net" modified="2026-11-02T00:00:00.000Z" agent="CS4433-LMS" version="22.1.0">
+  <diagram id="Architecture" name="Architecture">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="t" value="Figure – Layered Architecture (Moderated LMS)" style="text;html=1;fontSize=16;fontStyle=1;align=left;" vertex="1" parent="1">
+          <mxGeometry x="40" y="20" width="500" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="l1" value="«layer» Presentation&#xa;ConsoleUI – login and role menus" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;spacingLeft=10;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="80" y="70" width="700" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="l2" value="«layer» Application / Business Logic&#xa;AuthService · AdminService · LecturerService · HoDService · StudentService" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;align=left;spacingLeft=10;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="80" y="170" width="700" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="l3" value="«layer» Domain&#xa;User hierarchy · Assignment · Submission · LatePenaltyStrategy · UserFactory" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=left;spacingLeft=10;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="80" y="280" width="700" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="l4" value="«layer» Data Access / Infrastructure&#xa;Repositories (SQLite) · PasswordHasher · schema.sql / lms.db" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;align=left;spacingLeft=10;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="80" y="390" width="700" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="a1" style="endArrow=block;html=1;endFill=1;" edge="1" parent="1" source="l1" target="l2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a2" style="endArrow=block;html=1;endFill=1;" edge="1" parent="1" source="l2" target="l3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a3" style="endArrow=block;html=1;endFill=1;" edge="1" parent="1" source="l3" target="l4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="n" value="Dependencies point downward only. Presentation has no SQL." style="text;html=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="80" y="490" width="500" height="30" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
